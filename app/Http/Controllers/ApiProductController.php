@@ -32,7 +32,7 @@ class ApiProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|min:3|max:255|string',
             'description' => 'required|min:3|string',
-            'price' => 'required|numeric|min:1|max:99999999|decimal:2',
+            'price' => 'required|numeric|min:1|max:99999999|decimal:0,2',
         ]);
 
         $product = Product::create($validated);
@@ -68,14 +68,12 @@ class ApiProductController extends Controller
         $validated = $request->validate([
             'name' => 'min:3|max:255|string',
             'description' => 'min:3|string',
-            'price' => 'numeric|min:1|max:99999999|decimal:2',
+            'price' => 'numeric|min:1|max:99999999|decimal:0,2',
         ]);
 
         $product->update($validated);
 
-        return response()->json([
-            'message' => 'Success',
-        ]);
+        return response('', 204);
     }
 
     /**
