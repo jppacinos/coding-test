@@ -38,6 +38,17 @@ function tableMakeRow({ id, ...data }) {
 
     const td = document.createElement('td');
     td.innerHTML = `
+      <button
+        type="button"
+        class="btn btn-link p-0"
+        data-bs-toggle="modal"
+        data-bs-target="#showModal"
+        data-bs-id="${id}"
+        data-bs-name="${data.name}"
+      >
+        View
+      </button>
+      <span class="mx-1">/</span>
       <a href="/products/${id}/edit" type="button" class="btn btn-link text-success p-0">
         Edit
       </a>
@@ -167,6 +178,52 @@ deleteModalEl.addEventListener('hide.bs.modal', () => {
         '#modal-delete-confirm'
     );
     modalDeleteButton.removeAttribute('onClick');
+});
+
+/**
+ * show modal
+ */
+
+const showModalEl = document.getElementById('showModal');
+
+// listen for showModal "show"
+showModalEl.addEventListener('show.bs.modal', async (event) => {
+    // Button that triggered the modal
+    const button = event.relatedTarget;
+
+    // Extract info from data-bs-* attributes
+    const itemId = button.getAttribute('data-bs-id');
+    const itemName = button.getAttribute('data-bs-name');
+
+    const contentEl = showModalEl.querySelector('#show-modal-contents');
+    const loadingEl = contentEl.querySelector('.show-loading');
+
+    /**
+     * data fetching and ui updates
+     */
+
+    loadingEl.style.display = 'block';
+    contentEl.querySelector('[data-name="name"] p').textContent = itemName;
+    contentEl.querySelector('[data-type="details"]').style.display = 'none';
+
+    const response = await fetch(`/api/products/${itemId}`, {
+        headers: { accept: 'application/json' },
+    });
+
+    const data = await response.json();
+
+    contentEl.querySelector('[data-name="description"] p').textContent =
+        data.description;
+    contentEl.querySelector('[data-name="price"] p').textContent = data.price;
+
+    const timestampsEl = contentEl.querySelectorAll(
+        '[data-name="timestamps"] p'
+    );
+    timestampsEl[0].textContent = `Created at: ${data.created_at}`;
+    timestampsEl[1].textContent = `Updated at: ${data.updated_at}`;
+
+    loadingEl.style.display = 'none';
+    contentEl.querySelector('[data-type="details"]').style.display = 'block';
 });
 
 /**

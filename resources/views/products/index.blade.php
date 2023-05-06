@@ -73,6 +73,50 @@
     </div>
     {{-- end delete modal --}}
 
+    {{-- show modal --}}
+    <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="showModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="modal-title font-monospace fw-bold text-primary">Product Information</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div id="show-modal-contents">
+                        <div data-name="name">
+                            <h6 class="fw-bold">Name</h6>
+                            <p></p>
+                        </div>
+
+                        <div class="show-loading text-center mt-4 mb-5" style="display: none;">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+
+                        <span data-type="details">
+                            <div data-name="description">
+                                <h6 class="fw-bold">Description</h6>
+                                <p></p>
+                            </div>
+                            <div data-name="price">
+                                <h6 class="fw-bold">Price</h6>
+                                <p></p>
+                            </div>
+                            <div data-name="timestamps">
+                                <h6 class="fw-bold">Timestamps</h6>
+                                <p class="mb-0">Created at: </p>
+                                <p class="mb-0">Updated at: </p>
+                            </div>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- end show modal --}}
+
     {{-- toasts --}}
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="toast-product-deleted" class="toast text-bg-primary" role="alert" aria-live="assertive"
