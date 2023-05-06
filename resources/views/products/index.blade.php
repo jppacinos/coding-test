@@ -72,6 +72,21 @@
         </div>
     </div>
     {{-- end delete modal --}}
+
+    {{-- toasts --}}
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="toast-product-deleted" class="toast text-bg-primary" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body font-monospace">
+                    Product deleted!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+    {{-- end toasts --}}
 @endsection
 
 @push('scripts')

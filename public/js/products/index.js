@@ -22,6 +22,7 @@ function tableStartLoading() {
 
 function tableMakeRow({ id, ...data }) {
     const tr = document.createElement('tr');
+    tr.setAttribute('data-id', id);
 
     const th = document.createElement('th');
     th.setAttribute('scope', 'row');
@@ -111,9 +112,30 @@ async function tableFetchData(url) {
 
 const deleteModalClass = new bootstrap.Modal('#deleteModal');
 
+const deleteToastClass = new bootstrap.Toast(
+    document.getElementById('toast-product-deleted'),
+    { delay: 2500 }
+);
+
 // handles ui changes and api call for deleting an item
 function deleteItem(id) {
-    console.log('to delete ' + id);
+    const tr = document.querySelector(
+        `#products-table tbody [data-id="${id}"]`
+    );
+
+    if (!tr) return;
+
+    tr.remove();
+
+    deleteToastClass.show();
+
+    fetch(`/api/products/${id}`, {
+        headers: { accept: 'application/json' },
+        method: 'DELETE',
+    })
+        .then(() => {})
+        .catch(() => {});
+
     deleteModalClass.hide();
 }
 
