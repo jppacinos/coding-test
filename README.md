@@ -117,4 +117,9 @@ If automatically generating a new repository does not work, follow these steps i
 Q: The management requested a new feature where in the fictional e-commerce app must have a "featured products" section.
 How would you go about implementing this feature in the backend?
 
-A: _Put your answer here_
+A: The possible solution is to create a `product_featured` table with columns of `id` (pk), and `product_id` (fk to `products.id`). When a product is featured, we insert a record in the `product_featured.product_id` with specified `products.id` and when it is no longer featured, then we will remove the `product_id` in the `product_featured` table.
+
+In retrieving this featured products in the backend, we can make join queries with this implementation in Laravel.
+```php
+Product::join('product_featured', 'product_featured.product_id', '=', 'products.id')->all();
+```
