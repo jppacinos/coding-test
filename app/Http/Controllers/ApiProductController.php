@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Services\ProductService;
+use Illuminate\Support\Facades\Cache;
 
 class ApiProductController extends Controller
 {
@@ -56,7 +57,11 @@ class ApiProductController extends Controller
      */
     public function show($product)
     {
-        $product = $this->productService->find($product);
+        $product = Cache::remember(
+            'product:' . $product,
+            now()->addMinutes(3),
+            fn() => $this->productService->find($product)
+        );
 
         if (!$product) {
             return \abort(404, 'Resource not found!');
