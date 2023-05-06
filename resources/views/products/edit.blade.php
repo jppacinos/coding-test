@@ -10,7 +10,9 @@
 
     <div class="row">
         <div class="col-12 col-lg-6">
-            <form>
+            <form id="form-edit">
+                <input value="{{ $product->id }}" name="id" type="text" hidden>
+
                 <div class="mb-3">
                     <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
                     <input value="{{ $product->name }}" name="name" type="text" class="form-control" id="name"
@@ -34,7 +36,7 @@
                 </div>
 
                 <div class="mt-3 mt-lg-4">
-                    <button class="btn btn-primary" type="submit">
+                    <button id="formSubmitButton" class="btn btn-primary" type="submit">
                         Confirm Edit
                     </button>
                 </div>
