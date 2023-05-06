@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Contracts\ProductRepositoryInterface;
+use App\Services\ProductService;
 
 class ProductController extends Controller
 {
@@ -43,9 +43,9 @@ class ProductController extends Controller
      * @param  int  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit($product, ProductRepositoryInterface $repository)
+    public function edit($product, ProductService $service)
     {
-        $product = $repository->find($product);
+        $product = $service->find($product);
 
         if (!$product) {
             \abort('404', 'Not Found');

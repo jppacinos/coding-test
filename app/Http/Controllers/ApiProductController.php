@@ -3,13 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Contracts\ProductRepositoryInterface;
+use App\Services\ProductService;
 
 class ApiProductController extends Controller
 {
-    public function __construct(
-        protected ProductRepositoryInterface $productRepository
-    ) {
+    public function __construct(protected ProductService $productService)
+    {
         //
     }
 
@@ -21,7 +20,7 @@ class ApiProductController extends Controller
     public function index(Request $request)
     {
         return response()->json(
-            $this->productRepository->paginate($request->query('per_page', 15))
+            $this->productService->paginate($request->query('per_page', 15))
         );
     }
 
@@ -39,7 +38,7 @@ class ApiProductController extends Controller
             'price' => 'required|numeric|min:1|max:99999999|decimal:0,2',
         ]);
 
-        $product = $this->productRepository->create($validated);
+        $product = $this->productService->create($validated);
 
         return response()->json([
             'message' => 'Success',
@@ -57,7 +56,7 @@ class ApiProductController extends Controller
      */
     public function show($product)
     {
-        $product = $this->productRepository->find($product);
+        $product = $this->productService->find($product);
 
         if (!$product) {
             return \abort(404, 'Resource not found!');
@@ -81,7 +80,7 @@ class ApiProductController extends Controller
             'price' => 'numeric|min:1|max:99999999|decimal:0,2',
         ]);
 
-        $this->productRepository->update($product, $validated);
+        $this->productService->update($product, $validated);
 
         return response('', 204);
     }
@@ -94,7 +93,7 @@ class ApiProductController extends Controller
      */
     public function destroy($product)
     {
-        $result = $this->productRepository->delete($product);
+        $result = $this->productService->delete($product);
 
         if (\is_null($result)) {
             return \abort(404, 'Resource not found!');
