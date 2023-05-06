@@ -123,3 +123,12 @@ In retrieving this featured products in the backend, we can make join queries wi
 ```php
 Product::join('product_featured', 'product_featured.product_id', '=', 'products.id')->all();
 ```
+
+<!-- APPLICATION SETUP -->
+## Local Setup
+
+-   run `composer install` (requires Composer: https://getcomposer.org)
+-   configure `.env.example` to `.env` please (also see: .env-backup)
+-   run `php artisan key:generate`
+-   run migrations `php artisan migrate:fresh --seed`
+-   run development server `php artisan serve`
