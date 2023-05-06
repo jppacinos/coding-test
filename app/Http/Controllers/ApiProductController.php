@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Contracts\ProductRepositoryInterface;
 
 class ApiProductController extends Controller
 {
+    public function __construct(
+        protected ProductRepositoryInterface $productRepository
+    ) {
+        //
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,9 +21,7 @@ class ApiProductController extends Controller
     public function index(Request $request)
     {
         return response()->json(
-            Product::paginate(
-                $request->query('per_page', 15)
-            )->withQueryString()
+            $this->productRepository->paginate($request->query('per_page', 15))
         );
     }
 
@@ -35,7 +39,7 @@ class ApiProductController extends Controller
             'price' => 'required|numeric|min:1|max:99999999|decimal:0,2',
         ]);
 
-        $product = Product::create($validated);
+        $product = $this->productRepository->create($validated);
 
         return response()->json([
             'message' => 'Success',
@@ -48,11 +52,17 @@ class ApiProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  int  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($product)
     {
+        $product = $this->productRepository->find($product);
+
+        if (!$product) {
+            return \abort(404, 'Resource not found!');
+        }
+
         return response()->json($product);
     }
 
@@ -60,10 +70,10 @@ class ApiProductController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Product  $product
+     * @param  int  $product
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Product $product)
+    public function update(Request $request, $product)
     {
         $validated = $request->validate([
             'name' => 'min:3|max:255|string',
@@ -71,7 +81,7 @@ class ApiProductController extends Controller
             'price' => 'numeric|min:1|max:99999999|decimal:0,2',
         ]);
 
-        $product->update($validated);
+        $this->productRepository->update($product, $validated);
 
         return response('', 204);
     }
@@ -79,12 +89,16 @@ class ApiProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Product  $product
+     * @param  int  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($product)
     {
-        $product->delete();
+        $result = $this->productRepository->delete($product);
+
+        if (\is_null($result)) {
+            return \abort(404, 'Resource not found!');
+        }
 
         return response('', 204);
     }

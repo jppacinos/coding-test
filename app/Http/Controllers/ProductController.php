@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Contracts\ProductRepositoryInterface;
 
 class ProductController extends Controller
 {
@@ -29,22 +29,28 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  int  $product
      * @return \Illuminate\Http\Response
      */
-    public function show(Product $product)
+    public function show($product)
     {
-        return redirect(route('products.edit', ['product' => $product->id]));
+        return redirect(route('products.edit', ['product' => $product]));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Product  $product
+     * @param  int  $product
      * @return \Illuminate\Http\Response
      */
-    public function edit(Product $product)
+    public function edit($product, ProductRepositoryInterface $repository)
     {
-        return view('products.edit', ['product' => $product]);
+        $product = $repository->find($product);
+
+        if (!$product) {
+            \abort('404', 'Not Found');
+        }
+
+        return view('products.edit', ['product' => (object) $product]);
     }
 }
